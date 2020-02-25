@@ -16,7 +16,9 @@ COPY --from=builder /go/src/github.com/drakkan/sftpgo/sql/sqlite /tmp/sql
 RUN set -x \
   && sqlite3 /tmp/sftpgo.db < /tmp/sql/20190828.sql \
   && sqlite3 /tmp/sftpgo.db < /tmp/sql/20191112.sql \
-  && sqlite3 /tmp/sftpgo.db < /tmp/sql/20191230.sql
+  && sqlite3 /tmp/sftpgo.db < /tmp/sql/20191230.sql \
+  && sqlite3 /tmp/sftpgo.db < /tmp/sql/20200116.sql \
+  && sqlite3 /tmp/sftpgo.db < /tmp/sql/20200208.sql
 
 FROM node:12.14-alpine3.11
 
