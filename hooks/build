@@ -1,0 +1,5 @@
+#!/bin/bash
+
+(echo "${SOURCE_BRANCH}" | grep -Eq  ^[0-9]+-v[0-9]+$) && echo "Tag LGTM" || echo "Unsupported tag format!"
+
+docker build -t ${DOCKER_REPO}:${SOURCE_BRANCH} .
