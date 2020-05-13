@@ -11,9 +11,6 @@ RUN cp -fv /go/bin/sftpgo /sftpgo-rootfs/bin/ \
   && cp -rfv /go/src/github.com/drakkan/sftpgo/templates /sftpgo-rootfs/etc/sftpgo/web/templates \
   && cp -rfv /go/src/github.com/drakkan/sftpgo/static /sftpgo-rootfs/etc/sftpgo/web/static 
 
-COPY docker-entrypoint.sh /sftpgo-rootfs/bin/entrypoint.sh
-COPY mount-helper.js /sftpgo-rootfs/bin/mount-helper.js
-
 FROM keinos/sqlite3 as migrations
 
 WORKDIR /tmp
@@ -30,11 +27,13 @@ FROM node:12.14-alpine3.11
 #RUN apk add --no-cache git rsync
 
 COPY --from=migrations /sftpgo-rootfs /
+COPY docker-entrypoint.sh /bin/entrypoint.sh
+COPY mount-helper.js /bin/mount-helper.js
 
 WORKDIR /etc/sftpgo
 
 RUN apk add --no-cache ca-certificates su-exec mysql-client \
-  && chmod +x /bin/entrypoint.sh \
+  && chmod +x /bin/entrypoint.sh /bin/mount-helper.js \
   && mkdir -p /data /sftp-jail /etc/sftpgo/web /etc/sftpgo/backups /etc/sftpgo/config
 
 ENV SFTPGO_LOG_FILE_PATH=${SFTPGO_LOG_FILE_PATH:-} \
