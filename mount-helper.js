@@ -111,6 +111,23 @@ const server = http.createServer(function (req, res) {
         return;
     }
 
+    if (req.url.startsWith("/find-mounts?")) {
+        const query = url.parse(req.url, true).query;
+
+        if (!query.baseDirectory || !query.baseDirectory.length) {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end();
+            return;
+        }
+
+        const baseDirectory = decodeURIComponent(query.baseDirectory).replace(`'`, ``);
+        const findMntCommand = `findmnt --kernel -n --list | grep -e '^${baseDirectory}' | sed 's/ \\/.*//' | sed 's/[ \\t]*$//g'`;
+        const findMntResult = runCommand(findMntCommand);
+
+        res.writeHead(result.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(findMntResult));
+    }
+
     res.writeHead(404);
     res.end();
     return;
