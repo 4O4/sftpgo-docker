@@ -9,7 +9,7 @@ function runCommand(command) {
     let stdout;
     try {
         stdout = execSync(command)
-        return { success: true, stdout: stdout ? stdout.toString() : null, stderr: null, message: null};
+        return { success: true, stdout: stdout ? stdout.toString() : null, stderr: null, message: null };
     } catch (stderr) {
         return {
             success: false,
@@ -37,7 +37,7 @@ const server = http.createServer(function (req, res) {
 
         res.writeHead(result.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(result));
-       
+
         return;
     }
 
@@ -56,7 +56,7 @@ const server = http.createServer(function (req, res) {
 
         res.writeHead(result.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(result));
-       
+
         return;
     }
 
@@ -96,9 +96,17 @@ const server = http.createServer(function (req, res) {
             const umountCommand = `umount '${mp.replace(`'`, ``)}'`;
             const umountResult = runCommand(umountCommand);
 
-            result.stdout += `\n${umountResult.stdout}`;
-            result.stderr += `\n${umountResult.stderr}`;
-            result.message += `\n${umountResult.message}`;
+            if (umountResult.stdout && umountResult.stdout.length) {
+                result.stdout += `\n${umountResult.stdout}`;
+            }
+
+            if (umountResult.stderr && umountResult.stderr.length) {
+                result.stderr += `\n${umountResult.stderr}`;
+            }
+            
+            if (umountResult.message && umountResult.message.length) {
+                result.message += `\n${umountResult.message}`;
+            }
 
             if (!umountResult.success) {
                 result.success = false;
