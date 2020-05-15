@@ -129,7 +129,8 @@ const server = http.createServer(function (req, res) {
         }
 
         const baseDirectory = decodeURIComponent(query.baseDirectory).replace(`'`, ``);
-        const findMntCommand = `findmnt --kernel -n --list | grep -e '^${baseDirectory}' | sed 's/ \\/.*//' | sed 's/[ \\t]*$//g'`;
+        // const findMntCommand = `findmnt --kernel -n --list | grep -e '^${baseDirectory}' | sed 's/ \\/.*//' | sed 's/[ \\t]*$//g'`;
+        const findMntCommand = `findmnt --kernel -n --list | grep -e '^${baseDirectory}' | sed -e 's#\\s\\+/[^\\[]*\\[\\(.*\\)] .*#:\\1#' | sed 's/[ \\t]*$//g'`;
         const findMntResult = runCommand(findMntCommand);
 
         res.writeHead(findMntResult.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
