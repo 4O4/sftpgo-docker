@@ -124,7 +124,7 @@ const server = http.createServer(function (req, res) {
         const findMntCommand = `findmnt --kernel -n --list | grep -e '^${baseDirectory}' | sed 's/ \\/.*//' | sed 's/[ \\t]*$//g'`;
         const findMntResult = runCommand(findMntCommand);
 
-        res.writeHead(result.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
+        res.writeHead(findMntResult.success === true ? 200 : 500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(findMntResult));
     }
 
