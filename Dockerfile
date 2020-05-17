@@ -32,7 +32,7 @@ COPY mount-helper.js /bin/mount-helper.js
 
 WORKDIR /etc/sftpgo
 
-RUN apk add --no-cache ca-certificates su-exec mysql-client findmnt \
+RUN apk add --no-cache ca-certificates su-exec mysql-client findmnt tzdata \
   && chmod +x /bin/entrypoint.sh /bin/mount-helper.js \
   && mkdir -p /data /sftp-jail /etc/sftpgo/web /etc/sftpgo/backups /etc/sftpgo/config
 
